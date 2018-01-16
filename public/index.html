@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello</title>
+</head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
+
+<body ng-app="myApp" ng-controller="myCtrl">
+
+<canvas id="myChart" height="400" width="700"></canvas>
+{{values}}
+
+<script type="text/javascript">
+
+	var app = angular.module("myApp",[]);
+	
+	app.controller('myCtrl',function($scope,$http){
+		var ctx = document.getElementById("myChart");
+		
+
+			// save the latest value of bitcoin
+			$http({
+				  method: 'GET',
+				  url: '/chartData'
+				}).then(function successCallback(res) {
+					
+					// Update the chart with new details
+					$http({
+						  method: 'GET',
+						  url: '/getData'
+						}).then(function successCallback(response) {
+							// Add all values into an Array to be used by chart.js
+						    $scope.values=[];
+							$scope.values.push(response.data[response.data.length-1].January);
+							$scope.values.push(response.data[response.data.length-1].February);
+							$scope.values.push(response.data[response.data.length-1].March);
+							$scope.values.push(response.data[response.data.length-1].April);
+							$scope.values.push(response.data[response.data.length-1].May);
+							$scope.values.push(response.data[response.data.length-1].June);
+							$scope.values.push(response.data[response.data.length-1].July);
+							$scope.values.push(response.data[response.data.length-1].August);
+							$scope.values.push(response.data[response.data.length-1].September);
+							$scope.values.push(response.data[response.data.length-1].October);
+							$scope.values.push(response.data[response.data.length-1].November);
+							$scope.values.push(response.data[response.data.length-1].December);
+							plotChart();
+						  }, function errorCallback(response) {
+						    
+						  });
+				    
+				  }, function errorCallback(response) {
+				    
+				  });
+
+
+			$scope.$watch(getItems, watcherFunction, true);
+				function getItems() {
+				    return myChart;
+				}
+
+			function watcherFunction(newData) {
+				     myChart=newData;
+				     
+				}
+		function plotChart() {
+			//I am using chart.js to put all the data into the chart
+			var myChart = new Chart(ctx, {
+			    type: 'line',
+			    data: {
+			        labels: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+			        datasets: [{
+			            label: 'Bitcoin Value',
+			            data: $scope.values,
+			            backgroundColor: [
+			                'rgba(255, 99, 132, 0.2)',
+			                'rgba(54, 162, 235, 0.2)',
+			                'rgba(255, 206, 86, 0.2)',
+			                'rgba(75, 192, 192, 0.2)',
+			                'rgba(153, 102, 255, 0.2)',
+			                'rgba(255, 159, 64, 0.2)'
+			            ],
+			            borderColor: [
+			                'rgba(255,99,132,1)',
+			                'rgba(54, 162, 235, 1)',
+			                'rgba(255, 206, 86, 1)',
+			                'rgba(75, 192, 192, 1)',
+			                'rgba(153, 102, 255, 1)',
+			                'rgba(255, 159, 64, 1)'
+			            ],
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			    	responsive : false,
+			        scales: {
+			            yAxes: [{
+			                ticks: {
+			                    beginAtZero:true
+			                }
+			            }]
+			        }
+			    }
+			});
+		}
+			
+		
+
+
+	});
+	
+
+
+
+
+</script>
+
+</body>
+</html>
