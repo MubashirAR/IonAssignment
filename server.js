@@ -39,10 +39,10 @@ const MyModel    = mongoose.model('data', mySchema);
    	request('https://api.myjson.com/bins/komgt', function (error, response, body) {
    	      console.log('error:', error); // Print the error if one occurred and handle it
    	      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            // save the values into the database
             var obj = new MyModel(JSON.parse(body));
             obj.save(function(err,room) {
-               console.log(room.id);
-               id=room.id;
+               
             });
             
    	      res.send(body)
